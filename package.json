@@ -1,0 +1,26 @@
+{
+  "name": "rinha-v2",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "build": "bun build src/index.ts --target bun --minify --outfile=dist/index.js",
+    "try": "bun try",
+    "test:unit": "bun test \\.spec\\.ts",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@elysiajs/cors": "^0.8.0",
+    "@elysiajs/eden": "^0.8.1",
+    "elysia": "latest",
+    "fp-ts": "^2.16.2",
+    "kysely": "^0.27.2",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "@types/pg": "^8.11.0",
+    "bun-types": "latest",
+    "ts-mockito": "^2.6.1"
+  },
+  "module": "src/index.js"
+}
