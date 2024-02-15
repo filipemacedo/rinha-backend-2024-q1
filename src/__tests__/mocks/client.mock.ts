@@ -2,11 +2,9 @@ import { Client } from "@infra/database/postgres/models/client";
 import { faker } from "@faker-js/faker";
 import { kyselyDb } from "@infra/database/postgres/connection";
 import { BalanceMockBuilder } from "./balance.mock";
-import ISaveRepository from "@infra/repositories/save-repository.interface";
 import { TransactionMockBuilder } from "./transaction.mock";
 import { TransactionType } from "@infra/database/postgres/models/transaction";
-import KyselyBalanceRepository from "@infra/repositories/kysely/kysely-balance.repository";
-import KyselyTransactionsRepository from "@infra/repositories/kysely/kysely-transactions.repository";
+import { KyselyClientRepository } from "@infra/repositories/kysely/kysely-clients.repository";
 
 type Props = Client;
 
@@ -63,8 +61,8 @@ export class ClientMockBuilder {
     return this.props;
   }
 
-  async save(repository: ISaveRepository<Client>): Promise<Client> {
-    const client = await repository.save({
+  async save(): Promise<Client> {
+    const client = await new KyselyClientRepository(kyselyDb).save({
       name: this.props.name,
       limit: this.props.limit,
       id: this.props.limit,
@@ -72,16 +70,14 @@ export class ClientMockBuilder {
 
     await Promise.all(
       this._transactions.map((transaction) =>
-        transaction
-          .withIdClient(client.id)
-          .save(new KyselyTransactionsRepository(kyselyDb))
+        transaction.withIdClient(client.id).save()
       )
     );
 
     await new BalanceMockBuilder()
       .withValue(this._balance ?? 0)
       .withIdClient(client.id)
-      .save(new KyselyBalanceRepository(kyselyDb));
+      .save();
 
     return client;
   }

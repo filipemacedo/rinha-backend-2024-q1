@@ -3,7 +3,8 @@ import {
   TransactionType,
 } from "@infra/database/postgres/models/transaction";
 import { faker } from "@faker-js/faker";
-import ISaveRepository from "@infra/repositories/save-repository.interface";
+import KyselyTransactionsRepository from "@infra/repositories/kysely/kysely-transactions.repository";
+import { kyselyDb } from "@infra/database/postgres/connection";
 
 export class TransactionMockBuilder {
   private props: Transaction = {
@@ -55,9 +56,7 @@ export class TransactionMockBuilder {
     return this.props;
   }
 
-  async save(repository: ISaveRepository<Transaction>): Promise<Transaction> {
-    const transaction = await repository.save(this.props);
-
-    return transaction;
+  async save(): Promise<Transaction> {
+    return new KyselyTransactionsRepository(kyselyDb).save(this.props);
   }
 }

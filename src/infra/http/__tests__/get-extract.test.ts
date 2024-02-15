@@ -5,7 +5,6 @@ import { ClientMockBuilder } from "@tests/mocks/client.mock";
 import { ExtractDTO } from "@application/dtos/extract.dto";
 import { ExtractMapper } from "@application/mappers/extract.mapper";
 import { kyselyDb } from "@infra/database/postgres/connection";
-import { KyselyClientRepository } from "@infra/repositories/kysely/kysely-clients.repository";
 import { TransactionType } from "@infra/database/postgres/models/transaction";
 
 type Overrides = {
@@ -15,11 +14,7 @@ type Overrides = {
 const makeSut = async (overrides?: Overrides) => {
   const app = getApp();
 
-  const saveClientRepository = new KyselyClientRepository(kyselyDb);
-
-  const client = await (overrides?.client ?? new ClientMockBuilder()).save(
-    saveClientRepository
-  );
+  const client = await (overrides?.client ?? new ClientMockBuilder()).save();
 
   const sut = app.clientes[client.id].extrato.get;
 

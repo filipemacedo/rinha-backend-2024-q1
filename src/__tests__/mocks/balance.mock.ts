@@ -1,6 +1,8 @@
 import { Balance } from "@infra/database/postgres/models/balance";
 import { faker } from "@faker-js/faker";
 import ISaveRepository from "@infra/repositories/save-repository.interface";
+import KyselyBalanceRepository from "@infra/repositories/kysely/kysely-balance.repository";
+import { kyselyDb } from "@infra/database/postgres/connection";
 
 export class BalanceMockBuilder {
   private props: Balance = {
@@ -33,7 +35,7 @@ export class BalanceMockBuilder {
     return this.props;
   }
 
-  save(repository: ISaveRepository<Balance>): Promise<Balance> {
-    return repository.save(this.props);
+  save(): Promise<Balance> {
+    return new KyselyBalanceRepository(kyselyDb).save(this.props);
   }
 }

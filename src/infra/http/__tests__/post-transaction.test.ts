@@ -7,7 +7,6 @@ import {
 } from "@application/dtos/transaction.dto";
 import { ClientMockBuilder } from "@tests/mocks/client.mock";
 import { kyselyDb } from "@infra/database/postgres/connection";
-import { KyselyClientRepository } from "@infra/repositories/kysely/kysely-clients.repository";
 import KyselyBalanceRepository from "@infra/repositories/kysely/kysely-balance.repository";
 
 type Overrides = {
@@ -17,11 +16,7 @@ type Overrides = {
 const makeSut = async (overrides?: Overrides) => {
   const app = getApp();
 
-  const saveClientRepository = new KyselyClientRepository(kyselyDb);
-
-  const client = await (overrides?.client ?? new ClientMockBuilder()).save(
-    saveClientRepository
-  );
+  const client = await (overrides?.client ?? new ClientMockBuilder()).save();
 
   const sut = app.clientes[client.id].transacoes.post;
 
