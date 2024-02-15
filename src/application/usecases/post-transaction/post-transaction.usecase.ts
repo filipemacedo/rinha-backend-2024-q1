@@ -126,11 +126,8 @@ export class PostTransaction implements IPostTransactionUseCase {
   private async debit(
     { client, value }: CreditOrDebitTransactionProps,
     trx: unknown
-  ) {
-    const { balance } = await this.getBalanceRepository.getBalance(
-      client,
-      trx
-    );
+  ): Promise<Either<Error, number>> {
+    const { balance } = await this.getBalanceRepository.getBalance(client, trx);
 
     if (balance - value < -client.limit) {
       return left(new InsufficientFundsError());
@@ -147,8 +144,8 @@ export class PostTransaction implements IPostTransactionUseCase {
   private async credit(
     { client, value }: CreditOrDebitTransactionProps,
     trx: unknown
-  ) {
-    const balance = this.balanceOpetarionsRepository.credit(
+  ): Promise<Either<Error, number>> {
+    const balance = await this.balanceOpetarionsRepository.credit(
       { client, amount: value },
       trx
     );
