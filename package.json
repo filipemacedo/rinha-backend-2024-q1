@@ -1,6 +1,6 @@
 {
   "name": "rinha-v2",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "build": "bun build src/index.ts --target bun --minify --outfile=dist/index.js",
